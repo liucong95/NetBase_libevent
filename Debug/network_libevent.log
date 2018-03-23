@@ -1,0 +1,16 @@
+﻿VisualGDB : warning : Found a source file with spaces in the path: "D:\Users\liucong\Documents\Visual Studio 2012\Projects\LinuxProject1\network_libevent\Acceptor.cpp". If the build fails, please rename/move it.
+  SSH: Connecting...
+  SSH: Handshaking...
+  SSH: Checking key...
+  SSH: Authenticating...
+  VisualGDB: Sending 2 updated source files to build machine...
+  VisualGDB: Run "make " in directory "/tmp/VisualGDB/libevent/Debug" on root@192.168.11.128 (SSH)
+  Scanning dependencies of target network_libevent
+  [ 16%] Building CXX object CMakeFiles/network_libevent.dir/Acceptor.cpp.o
+  [ 33%] Building CXX object CMakeFiles/network_libevent.dir/EventReactor.cpp.o
+  [ 50%] Building CXX object CMakeFiles/network_libevent.dir/IoHandler.cpp.o
+  [ 66%] Building CXX object CMakeFiles/network_libevent.dir/network_libevent.cpp.o
+  [ 83%] Building CXX object CMakeFiles/network_libevent.dir/SessionHandler.cpp.o
+  [100%] Building CXX object CMakeFiles/network_libevent.dir/SessionManager.cpp.o
+  Linking CXX executable network_libevent
+  [100%] Built target network_libevent

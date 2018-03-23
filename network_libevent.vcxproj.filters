@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{986c496f-09fb-43cd-9953-15fd96af1bd9}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{a33b5c66-335c-4610-a196-7ef3c4a601d4}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource files">
+      <UniqueIdentifier>{46502d6a-46c3-4145-b118-7c58fb53576c}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="VisualGDB settings">
+      <UniqueIdentifier>{c745081d-9de0-4c58-b0f3-efaf49b8f841}</UniqueIdentifier>
+      <Extensions>*.vgdbsettings</Extensions>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{beb5fd1f-c494-448f-910c-ebefb5547fe4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="network_libevent.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="EventReactor.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="SessionManager.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="SessionHandler.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="Acceptor.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="IoHandler.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="CMakeLists.txt">
+      <Filter>Source files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="network_libevent-Debug.vgdbsettings">
+      <Filter>VisualGDB settings</Filter>
+    </None>
+    <None Include="network_libevent-Release.vgdbsettings">
+      <Filter>VisualGDB settings</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="EventReactor.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionManager.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionHandler.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Acceptor.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="IoHandler.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="DefineInclude.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="singleton.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="RingBuff.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageQuene.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketHelper.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadHandle.h">
+      <Filter>common</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
