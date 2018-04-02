@@ -1,0 +1,86 @@
+#pragma once
+
+#include "RingBuff.h"
+#include "Include.h"
+#include "Lock.h"
+
+class PacketHelper
+{
+public:
+
+	PacketHelper(void)
+	{
+		m_kMessageData.Init(65535);
+		m_pkLock = new Lock();
+	}
+
+	~PacketHelper(void)
+	{
+	}
+	
+	bool Empty()
+	{
+		return m_kMessageData.Empty();
+	}
+	
+	void Clear()
+	{
+		m_kMessageData.Clear();
+	}
+	
+	void PushMsg(const char *data, int size, short type = 0)
+	{
+		m_pkLock->lock();
+		m_kHeader.Reset();
+		m_kHeader.type = type;
+		m_kHeader.size = size;
+		
+		if (!m_kMessageData.Write((char*)&m_kHeader, sizeof(PackHeader)))
+		{
+			Log_Err("Logic Error");
+			m_pkLock->unlock();
+			return;
+		}
+		
+		if (!m_kMessageData.Write(data, size))
+		{
+			Log_Err("Logic Error");
+			m_pkLock->unlock();
+			return;
+		}
+		m_pkLock->unlock();
+	}
+	
+	bool PopMsg(char *data)
+	{
+		m_pkLock->lock();
+		if (m_kMessageData.Empty())
+		{	
+			m_pkLock->unlock();
+			return false;
+		}
+		
+		PackHeader header;
+		if (!m_kMessageData.Read((char*)&header, sizeof(PackHeader)))
+		{
+			Log_Err("Logic Error");
+			m_pkLock->unlock();
+			return false;
+		}
+		
+		if (!m_kMessageData.Read(data, header.size))
+		{
+			Log_Err("Logic Error");
+			m_pkLock->unlock();
+			return false;;
+		}
+		m_pkLock->unlock();
+		return true;
+	}
+	
+private:
+	RingBuff<char>	m_kMessageData;
+	PackHeader		m_kHeader;
+	Lock*			m_pkLock;
+};
+

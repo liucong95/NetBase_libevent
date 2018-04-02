@@ -1,0 +1,51 @@
+#pragma once
+#include "queue"
+#include "DefineInclude.h"
+#include "RingBuff.h"
+#include "lock.h"
+
+template<typename T>
+class Queue
+{
+public:
+	Queue(void) 
+	{
+		m_lock = new Lock();
+	};
+	~Queue(void) {};
+	void Clear()
+	{
+		m_lock->lock();
+		std::queue<T> empty;
+		swap(empty,m_kDataVec);
+		m_lock->unlock();
+	}
+	
+	bool Empty()
+	{
+		return m_kDataVec.empty();
+	}
+	void PushMsg(T &item)
+	{
+		m_lock->lock();
+		m_kDataVec.push(item);
+		m_lock->unlock();
+	}
+	
+	bool PopMsg(T &item)
+	{
+		m_lock->lock();
+		if (0 >= m_kDataVec.size())
+		{
+			return false;
+		}
+		
+		item = m_kDataVec.front();
+		m_kDataVec.pop();
+		m_lock->unlock();
+		return true;
+	}
+private:
+	std::queue<T> m_kDataVec;
+	Lock	*m_lock;
+};

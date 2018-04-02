@@ -1,0 +1,99 @@
+#include "Acceptor.h"
+#include "SessionManager.h"
+
+Acceptor::Acceptor(void)
+{
+}
+
+
+Acceptor::~Acceptor(void)
+{
+}
+
+void Acceptor::IintListenSock()
+{
+	ListenSockFd = socket(AF_INET, SOCK_STREAM, 0);
+	if (ListenSockFd < 0)
+	{
+		Log("Log Error");
+		return;
+	}
+	
+	sockaddr_in serverAddr;
+	memset(&serverAddr, 0, sizeof(serverAddr));
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_addr.s_addr = inet_addr("192.168.11.128");
+	serverAddr.sin_port = htons(10086);
+	
+	int err = bind(ListenSockFd, (sockaddr*)&serverAddr, sizeof(sockaddr_in));
+	if(err < 0)
+	{
+		Log("Log Error");
+		return;
+	}
+	
+	err = listen(ListenSockFd, 1024);
+	if (err < 0)
+	{
+		Log("Log Error");
+		return;
+	}
+	
+	Log("start listen");
+	
+	SetHandleFd(ListenSockFd);
+	RegisterIoEvent(EV_ET | EV_READ | EV_PERSIST);	
+}
+
+void Acceptor:: ProcessMsg()
+{
+	
+}
+int Acceptor::HandleInput()
+{
+	SessionManager *pkSessionMgr = GetSessionMgr();
+	if(NULL == pkSessionMgr)
+	{
+		Log_Err("Logic Error");
+		return -1;
+	}
+	
+	SessionHandler *pkSessionHandle = pkSessionMgr->GetSessionFromPool();
+	if (NULL == pkSessionHandle)
+	{
+		Log_Err("Logic Error");
+		return -1;
+	}
+	
+	int sock = accept(m_fd, (sockaddr *)&m_kClientAddr, &m_kSockLen);
+	if (sock <= 0)
+	{
+		Log_Err("Logic Error");
+		pkSessionMgr->AddSessionToPool(pkSessionHandle);
+		return 0;
+	}
+	
+	pkSessionHandle->Reset();
+	pkSessionHandle->SetHandleFd(sock);
+	pkSessionHandle->SetSessionMgr(pkSessionMgr);
+	pkSessionHandle->SetEventReactor(GetEventReactor());
+	pkSessionHandle->RegisterIoEvent(EV_ET | EV_READ | EV_PERSIST);
+	
+	SessionMsgType kSessionMsg;
+	kSessionMsg.kCurrentOperaType = OPT_CONNECT;
+	pkSessionMgr->PushMsgSession(SessionMsgType(OPT_CONNECT, pkSessionHandle));
+	
+	Log("Accept new Connection");
+	return 0;
+
+}
+
+void Acceptor::HandleClose()
+{
+#ifdef _WIN32
+	closesocket(ListenSockFd);
+#else
+	close(ListenSockFd);
+#endif // _WIN32	
+	Log("Close listen Socket");
+}

@@ -1,0 +1,66 @@
+#pragma once
+#include "PacketHelper.h"
+#include "EventReactor.h"
+#include "Include.h"
+#include "RingBuff.h"
+
+class SessionHandler;
+struct event_base;
+
+struct Packet
+{
+	Packet(){};
+	Packet(OperatType type)
+	{
+		kOpteraType = type;
+	}
+	OperatType kOpteraType;
+	
+	std::string sStr;
+};
+
+class SessionHandler
+{
+public:
+	SessionHandler(void);
+	~SessionHandler(void);
+	void Reset();
+	
+	int	GetHandleFd(){return m_fd;}
+	void SetHandleFd(int fd) {m_fd = fd;};
+	
+	event_base *GetEventBase();
+	
+	void SetSessionMgr(SessionManager* pkMgr) {m_pkSessionMgr = pkMgr;};
+	SessionManager *GetSessionMgr() {return m_pkSessionMgr;};
+	
+	void SetEventReactor(EventReactor* pkReactor) {m_pkEventReactor = pkReactor;};
+	EventReactor *GetEventReactor(){return m_pkEventReactor;};
+	
+//	void SetCurrentOperaType(OperatType type) {m_kCurrentOperaType = type;};
+//	OperatType GetCurrentOperaType() {return m_kCurrentOperaType;};
+	
+	static void ProcessOpreation_cb(int fd, short what, void *arg);
+	virtual int HandleInput() { return -1;};
+	virtual int HandleOutput() { return -1;};
+	virtual int HandleTimeOut() { return -1;};
+	virtual int HandleSingal() { return -1;};
+	virtual void HandleClose() {};
+	virtual void ProcessMsg() {};
+	
+	int	RegisterIoEvent(short what);
+	int RegisterTimeEvent(timeval &tv);
+	int RegisterSignalEvent();
+	
+	
+protected:
+	PacketHelper			m_kMessageQuene;
+	int	m_fd;
+	
+private:	
+	SessionManager*			m_pkSessionMgr;
+	EventReactor*			m_pkEventReactor;	
+	
+	event*	m_kEventType[ET_MAX];
+};
+

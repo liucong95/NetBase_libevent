@@ -77,9 +77,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Acceptor.h" />
-    <ClInclude Include="DefineInclude.h" />
+    <ClInclude Include="Define.h" />
     <ClInclude Include="EventReactor.h" />
+    <ClInclude Include="Include.h" />
     <ClInclude Include="IoHandler.h" />
+    <ClInclude Include="lock.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="MessageQuene.h" />
     <ClInclude Include="PacketHelper.h" />

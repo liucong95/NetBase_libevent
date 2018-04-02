@@ -5,12 +5,19 @@
 #include "time.h"
 #include "ThreadHandle.h"
 #include "singleton.h"
+#include "Define.h"
+
+#ifdef _MSC_VER
+#define snprintf _snprintf
+#pragma warning(disable:4996)
+#pragma warning(disable:4267)
+#endif
 
 enum LogType
 {
-	INFO = 1,
-	WARN = 2,
-	ERROR = 3,
+	_INFO = 1,
+	_WARN = 2,
+	_ERROR,
 };
 
 #pragma pack(1)
@@ -51,19 +58,19 @@ public:
 		size_t size = 0;
 		switch ((LogType)type)
 		{
-		case INFO:
+		case _INFO:
 			size = fwrite(str, 1, len, m_pkInfoFile);
 			break;
-		case WARN:
+		case _WARN:
 			size = fwrite(str, 1, len, m_pkWarnFile);
 			break;
-		case ERROR:
+		case _ERROR:
 			size = fwrite(str, 1, len, m_pkErroFile);
 			break;			
 		}
 		
 		printf("%s", str);
-		return size ;
+		return (int)size ;
 	}
 	
 	void flush()
@@ -146,13 +153,14 @@ public:
 		sprintf(time_str, "%04d-%02d-%02d %02d:%02d:%02d",
 		        colock->tm_year + 1900, colock->tm_mon + 1, colock->tm_mday, colock->tm_hour, colock->tm_min, colock->tm_sec);
 
+		return NULL;
 	}
 	
 	void format(int type ,const char * file, int line, const char* fmt, ...)
 	{
 		GetTime();
 		
-		std::string sType = type == INFO ? "INFO" : (type == WARN ? "WARN" : "ERROR");
+		std::string sType = type == _INFO ? "INFO" : (type == _WARN ? "WARN" : "ERROR");
 		
 		int n = snprintf(dest_str, 1023, "%s %s %s:%d: ", time_str, sType.c_str(), GetFileName(file), line);
 		va_list ap;
@@ -196,7 +204,7 @@ public:
 			if (kHeader.size <= 0)
 			{	
 				pkLogger->m_kFileHandle->flush();
-				usleep(100000);
+				SLEEP(100);
 				continue;
 			}
 			
@@ -205,20 +213,21 @@ public:
 			pkLogger->m_kFileHandle->Write(kHeader.type, msgBuff, kHeader.size);
 			
 		}
+		return NULL;
 	}
 	
 	void PushLog(const char *src, int len)
 	{
-		ThreadMgr->Lock();
+		ThreadMgr->lock();
 		m_kLogQueue.Write(src, len);
-		ThreadMgr->UnLock();
+		ThreadMgr->unlock();
 	}
 	
 	void PopLog(char *des, int len)
 	{
-		ThreadMgr->Lock();
+		ThreadMgr->lock();
 		m_kLogQueue.Read(des, len);
-		ThreadMgr->UnLock();
+		ThreadMgr->unlock();
 	}
 private:
 	char dest_str[1024]; 
